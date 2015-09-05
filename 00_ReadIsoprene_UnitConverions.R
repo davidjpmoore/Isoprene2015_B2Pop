@@ -1,7 +1,7 @@
 #00_testingPlantEcoPhys
 #Author: Dave Moore
 #Date: 09/05/2015
-#Purpose: Test the Plantecophys package - a stand alone package to model common leaf gas exchange measurements
+#Purpose: Read in Amberly's data and revise the unit conversions as per Russ's note
 
 
 # download the source code for the package: https://cran.r-project.org/web/packages/plantecophys/index.html
@@ -72,6 +72,7 @@ IsoByCi + aes(shape = factor(Tref)) +
   ylab("Isoprene Emisssion Rate (nmol/umol air/sec/m2)")+
   xlab("Ci") +
   geom_smooth(method=lm,se=FALSE)
+
 
 
 
