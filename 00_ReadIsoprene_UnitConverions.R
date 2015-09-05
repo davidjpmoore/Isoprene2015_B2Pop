@@ -1,7 +1,7 @@
 #00_testingPlantEcoPhys
 #Author: Dave Moore
 #Date: 09/05/2015
-#Purpose: Test the Plantecophys package - a stand alone package to model common leaf gas exchange measurements
+#Purpose: Read in Amberly's data and revise the unit conversions as per Russ's note
 
 
 # download the source code for the package: https://cran.r-project.org/web/packages/plantecophys/index.html
@@ -27,6 +27,10 @@ summary(B2Physiologymaster)
 # 4. Divide by 6.2 cm^2 and multiply by 10,000 to get per unit leaf area.
 
 #This should provide numbers between 15 and 50 nmol m-2 s-1, which is typical of isoprene emission rates. 
+
+
+Rho_air25 = 1183.9 #mg/L
+Rho_air35 = 1145.5 #mg/L
 
 
 # 1. Amberly's isoprene calibration curves are in units of ppb, which converts straight through to nmol/mol.
@@ -59,31 +63,5 @@ dat_Iso_01$Iso_nmol_p_mol = Iso_nmol_p_mol # Isoprene (nmol/mol)
 dat_Iso_01$Iso_nmol_p_umol_p_sec_p_m2 = Iso_nmol_p_umol_p_sec_p_m2 
 
 
-#plot
-IsoByCi <- ggplot(dat_Iso_01, aes(x=Ci, y=Iso_nmol_p_umol_p_sec_p_m2))
-IsoByCi + aes(shape = factor(Tref)) +
-  geom_point(aes(colour = factor(Tref)), size = 8) +
-  geom_point(colour="grey90", size = 2.5) +
-  theme_classic() +
-  theme(axis.text=element_text(size=20),
-        axis.title=element_text(size=22,face="bold")) + 
-  theme(panel.border = element_blank(), axis.line = element_line(colour="black", size=2, lineend="square"))+
-  theme(axis.ticks = element_line(colour="black", size=2, lineend="square"))+
-  ylab("Isoprene Emisssion Rate (nmol/umol air/sec/m2)")+
-  xlab("Ci") +
-  geom_smooth(method=lm,se=FALSE)
-
-
-
-IsoByCi_A <- ggplot(B2Physiologymaster, aes(x=Ci, y=Iso_mol_pm2_psec))
-IsoByCi_A + aes(shape = factor(Tref)) +
-  geom_point(aes(colour = factor(Tref)), size = 8) +
-  geom_point(colour="grey90", size = 2.5) +
-  theme_classic() +
-  theme(axis.text=element_text(size=20),
-        axis.title=element_text(size=22,face="bold")) + 
-  theme(panel.border = element_blank(), axis.line = element_line(colour="black", size=2, lineend="square"))+
-  theme(axis.ticks = element_line(colour="black", size=2, lineend="square"))+
-  ylab("Amberly's Isoprene Emisssion Rate (nmol/umol air/sec/m2)")+
-  xlab("Ci") +
-  geom_smooth(method=lm,se=FALSE)
+#Save data to Rdata file
+save(dat_Iso_01, file="dat_Iso_01.Rda")
