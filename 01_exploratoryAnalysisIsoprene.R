@@ -5,7 +5,8 @@
 load ("dat_Iso_01.Rda")
 
 
-
+Check =group_by(dat_Iso_01, Tref)
+plot(dat_Iso_01$MeanIso)
 
 #plot
 IsoByCi <- ggplot(dat_Iso_01, aes(x=Ci, y=Iso_nmol_p_umol_p_sec_p_m2))
