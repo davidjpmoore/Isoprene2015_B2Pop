@@ -11,6 +11,7 @@
 library (plantecophys)
 library(dplyr)
 library(ggplot2)
+library(grid) #required for 'unit'
 #Load data
 #Amberly's data from B2
 
@@ -36,15 +37,15 @@ ACi <- ggplot(Junkaci02, aes(x=Ci, y=Anet))
 line_label <- Junkaci02$line[1]
 date_label <- Junkaci02$date[1]
 
-ACi + aes(shape = factor(Tref)) +
+ACi + aes(shape = factor(line)) +
   ggtitle(paste("Line",line_label,"Date ",date_label,sep=" "))+
-  geom_point(aes(colour = factor(Tref)), size = 8) +
-  geom_point(colour="grey90", size = 2.5) +
+  geom_point(size = 8) +
   theme_classic() +
   theme(axis.text=element_text(size=20),
         axis.title=element_text(size=22,face="bold")) + 
   theme(panel.border = element_blank(), axis.line = element_line(colour="black", size=2, lineend="square"))+
   theme(axis.ticks = element_line(colour="black", size=2, lineend="square"))+
+  theme(axis.ticks.length=unit(-0.25, "cm"), axis.ticks.margin=unit(0.5, "cm"))+ #provide negative value for tick length = they face inwards
   ylab("Assimilation (umol/m2/sec)")+
   xlab("Ci") 
 #
