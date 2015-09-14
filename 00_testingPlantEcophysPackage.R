@@ -25,14 +25,14 @@ Junkaci02 = dat_Iso_01   %>% #piping command for filter
   #restrict to a single Aci curve filter out any Anet values that are too big
   filter(line=="49-177", date=="7/20/2014", Tref==25, Anet < 50) %>% #piping command for select
   #select only the Anet, gs, Ci variables
-  mutate(PARi=1800)  %>%
-  select(Anet,gs, Ci, Tref, PARi, line, date)    
+  mutate(PARi=1800, Photo=Anet,CO2S=CO2, Tleaf=Tref)  %>%
+  select(line,date,CO2S,Ci,Tleaf,Photo,PARi) 
 
 #Aci plots
 #
 # Plotting the data used to fit this curve
 #
-ACi <- ggplot(Junkaci02, aes(x=Ci, y=Anet))
+ACi <- ggplot(Junkaci02, aes(x=Ci, y=Photo))
 
 line_label <- Junkaci02$line[1]
 date_label <- Junkaci02$date[1]
@@ -57,11 +57,9 @@ ACi + aes(shape = factor(line)) +
 # Note: you need to specify the dataframe and the variables that correspond to ALEAF, Tleaf, Ci and PPFD
 # Note: I haven't worked out how to exclude outliers but PECAN:Photosynthesis has this function built in
 #
+CheckACI_new=fitaci(Junkaci02)
 
-CheckACI= fitaci(Junkaci02, varnames = list(ALEAF = "Anet", Tleaf = "Tref", Ci = "Ci", PPFD="PARi"), Tcorrect = TRUE, citransition = NULL,
-       quiet = FALSE, startValgrid = FALSE, algorithm = "default", useRd = FALSE )
-
-plot(CheckACI$df$Amodel, CheckACI$df$Ameas)
+plot(CheckACI_new$df$Amodel, CheckACI_new$df$Ameas)
 
 # 
 # ACi_fit <- ggplot(CheckACI$df, aes(x=Ci, y=Amodel))

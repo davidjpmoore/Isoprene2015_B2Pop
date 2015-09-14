@@ -8,9 +8,11 @@
 #install.packages('PATH/plantecophys_0.6-3.zip', repos = NULL, type="source")
 #Manual: https://cran.r-project.org/web/packages/plantecophys/plantecophys.pdf 
 
+
 library (plantecophys)
 library(dplyr)
 library(ggplot2)
+library(grid) #required for 'unit'
 #Load data
 #Amberly's data from B2
 
@@ -60,8 +62,8 @@ load("data/acidata1.rda")
 
 testACI=fitaci(acidata1)
 
-line=as.list(dat_Iso_01$line)
-dateMeas=as.list(dat_Iso_01$date)
+line=dat_Iso_01$line
+dateMeas=dat_Iso_01$date
 CO2S=dat_Iso_01$CO2
 Ci=dat_Iso_01$Ci
 Tleaf=dat_Iso_01$Tref
@@ -71,13 +73,13 @@ acidata2=data.frame(line,dateMeas,CO2S,Ci,Tleaf,Photo)
 
 acidata3 = acidata2   %>% #piping command for filter
   #restrict to a single Aci curve filter out any Anet values that are too big
-  filter(line=="49-177", dateMeas=="7/20/2014"), Tleaf==25, Photo < 50) %>% #piping command for select
+  filter(line=="49-177", dateMeas=="7/20/2014", Tleaf==25, Photo < 50) %>% #piping command for select
   #select only the Anet, gs, Ci variables
   mutate(PARi=1800)  %>%
-  select(CO2S,Ci,Tleaf,Photo) 
+  select(line,dateMeas,CO2S,Ci,Tleaf,Photo, PARi) 
 
 
-testACI2=fitaci(acidata2)
+testACI3=fitaci(acidata3)
 
 
 testACI
@@ -85,7 +87,7 @@ testACI
 CheckACI= fitaci(Junkaci02, varnames = list(ALEAF = "Anet", Tleaf = "Tref", Ci = "Ci", PPFD="PARi"), Tcorrect = TRUE, citransition = NULL,
                  quiet = FALSE, startValgrid = FALSE, algorithm = "default", useRd = FALSE )
 
-plot(CheckACI$df$Amodel, CheckACI$df$Ameas)
+plot(testACI3$df$Amodel, testACI3$df$Ameas)
 
 # 
 # ACi_fit <- ggplot(CheckACI$df, aes(x=Ci, y=Amodel))
