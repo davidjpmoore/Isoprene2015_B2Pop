@@ -2,6 +2,12 @@
 #author: Dave Moore
 #purpose: explore isoprene data from 2014 B2 Poplar Plantation
 
+#Libraries
+library (plantecophys)
+library(dplyr)
+library(ggplot2)
+library(grid) #required for 'unit'
+
 load ("dat_Iso_01.Rda")
 
 #check unique dates and lines

@@ -11,6 +11,7 @@
 library (plantecophys)
 library(dplyr)
 library(ggplot2)
+library(grid) #required for 'unit'
 #Load data
 #Amberly's data from B2
 
