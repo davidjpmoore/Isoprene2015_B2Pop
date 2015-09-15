@@ -17,8 +17,11 @@
 # updated R 09/14/2015
 # updated Rstudio 09/14/2015
 # updated dplyr 09/14/2015
+# updated plantecophys to developer version 0.6.6
+# library(devtools)
+# install_bitbucket("remkoduursma/plantecophys")
 
-
+library(devtools)
 library (plantecophys)
 library(dplyr)
 library(ggplot2)
@@ -46,11 +49,9 @@ Junkaci02 = dat_Iso_01   %>% #piping command for filter
   select(line,dateMeas,CO2S,Ci,Tleaf,Photo, PARi)    
 
 CheckACI= fitaci(Junkaci02)
-###############
-# gives error #
-###############
-# Error in which.max(data$Ci) : 
-#   (list) object cannot be coerced to type 'double'
+#######################################
+# WORKS! With Developer version 0.6.6 #
+#######################################
 
 ########################
 #check data is not funky
@@ -94,11 +95,10 @@ acidataN = acidata2_N   %>% #piping command for filter
   select(line,dateMeas,CO2S,Ci,Tleaf,Photo, PARi) 
 
 testACI2_N=fitaci(acidataN)
-###############
-# gives error #
-###############
-# Error in which.max(data$Ci) : 
-#   (list) object cannot be coerced to type 'double'
+
+#######################################
+# WORKS! With Developer version 0.6.6 #
+#######################################
 
 #dplyr is doing something odd and I can't work out what 
 
@@ -155,9 +155,11 @@ testACI3=fitaci(acidata3)
 
 plot(testACI3$df$Amodel, testACI3$df$Ameas)
 
-####################################################################################
-# I don't understand why these two files don't provide the same result from fitaci #
-####################################################################################
+#####################################################################################################
+# In release 09/14/2015 two files don't provide the same result from fitaci                         #
+# Using developer version the local data frame and regular data frame give same result with no error#
+#####################################################################################################
+
 # 
 # One possible explanation is that acidataN is a "local data frame" , while acidata3 and acidata1 (example set)
 # are both just dataframes
