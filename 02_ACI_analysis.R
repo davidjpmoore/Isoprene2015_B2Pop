@@ -125,7 +125,8 @@ VcmaxbyGenotype + aes(shape = factor(Tleaf)) +
 
 JmaxbyGenotype <- ggplot(IsopreneACI_coef_byTRT, aes(x=Genotype, y=Jmax))
 # 
-JmaxbyGenotype + aes(shape = factor(Tleaf)) +
+
+VcmaxbyGenotype + aes(shape = factor(Tleaf)) +
   geom_boxplot(outlier.colour = "black") +
   geom_point(aes( colour = factor(Tleaf)), size = 3, position = "jitter") +
   theme_classic() +
