@@ -55,8 +55,19 @@ Junkaci_001 = dat_Iso_01   %>% #piping command for filter
 Junkaci_002 = Junkaci_001 %>%
 group_by(ACIgroups)
 
+CheckACI_dplyr= fitacis(Junkaci_002, "ACIgroups")
 
-CheckACI= fitacis(Junkaci_002, "ACIgroups")
+# save(Junkaci_002, file="output/IsopreneACIs_Amberly_grouped.csv")
+# 
+# Junkaci_002 %>% write.csv(.,file = "output/IsopreneACIs_Amberly_grouped.csv")
+
+#hacked groups into simple catagories outside R = A1, B1...etc
+#removed outlier points where LI6400 was not stable & caused failure of fit
+checkhack=read.csv("data/IsopreneACIs_Amberly_hackedgroups.csv")
+CheckACI= fitacis(checkhack, "ACIgroups")
+
+ACI_coef <- coef(CheckACI)
+
 ##################################################################
 # With Developer version 0.6.6                                   #
 # DOES NOT FUNCTION:                                             #
