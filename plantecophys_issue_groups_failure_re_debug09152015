@@ -1,0 +1,76 @@
+
+R version 3.1.3 (2015-03-09) -- "Smooth Sidewalk"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Workspace loaded from D:/Dropbox/rProjectsShare/Isoprene2015_B2Pop/.RData]
+
+Installing plantecophys
+"D:/software/R/R-31~1.3/bin/x64/R" --no-site-file --no-environ --no-save --no-restore CMD INSTALL  \
+  "C:/Users/dmoore.ARID/AppData/Local/Temp/RtmpkjBO9V/devtoolsf54453214af/remkoduursma-plantecophys-4cbe388a9836"  \
+  --library="D:/software/R/R-3.1.3/library" --install-tests 
+
+* installing *source* package 'plantecophys' ...
+** R
+** data
+*** moving datasets to lazyload DB
+** preparing package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded
+* DONE (plantecophys)
+Reloading installed plantecophys
+> library (plantecophys)
+> library(dplyr)
+> library(ggplot2)
+> library(grid) #required for 'unit'
+> #Load data
+> #Amberly's data from B2
+> 
+> #loading dat_Iso1.Rda - isoprene unit conversions completed using 00_ReadIsoprene_UnitConversions
+> load ("dat_Iso_01.Rda")
+> 
+> #to make this from scratch just run: 00_ReadIsoprene_UnitConverions.R 
+> 
+> ##########################################
+> #Use filter, mutate and select in one step
+> ##########################################
+> 
+> # For the simple case - create a dataframe that is a subset of dat_Iso_01.Rda containing a single
+> # A/ci curve - I picked the line and data at random from a list of available lines and dates.
+> #
+> Junkaci_001 = dat_Iso_01   %>% #piping command for filter
++   #restrict to a single Aci curve filter out any Anet values that are too big
++   filter(Anet < 50) %>% #piping command for mutate
++   #create new variables (rename them) to be consistent with fitacis
++   #Grouping by genetic line, measurement date and reference temperature
++   mutate(ACIgroups=as.factor(paste(line, date, Tref, sep="")), PARi=1800, dateMeas=date, CO2S=CO2, Ci=Ci, Tleaf=Tref, Photo=Anet, Patm=91)  %>%
++ 
++   #select only these variables
++   select(line,dateMeas,ACIgroups, CO2S,Ci,Tleaf,Photo, PARi, Patm)  
+> 
+> #group by ACIgroups
+> Junkaci_002 = Junkaci_001 %>%
++ group_by(ACIgroups)
+> CheckACI_dplyr= fitacis(Junkaci_002, "ACIgroups")
+Error: data_frames can only contain 1d atomic vectors and lists
+
+#hacked groups into simple catagories outside R = A1, B1...etc
+> checkhack=read.csv("data/IsopreneACIs_Amberly_hackedgroups.csv")
+> CheckACI= fitacis(checkhack, "ACIgroups")
+  |==================================================| 100%
+The following groups could not be fit:
+[1] "C2" "F2" "I2" "N1" "U1"
