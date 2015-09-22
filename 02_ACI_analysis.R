@@ -112,28 +112,30 @@ plot(IsopreneACI_coef_byTRT$Tref[IsopreneACI_coef_byTRT$Vcmax>0], IsopreneACI_co
 
 VcmaxbyGenotype <- ggplot(IsopreneACI_coef_byTRT, aes(x=Genotype, y=Vcmax))
 # 
-VcmaxbyGenotype + aes(shape = factor(Tleaf)) +
-  geom_boxplot(outlier.colour = "black") +
-  geom_point(aes( colour = factor(Tleaf)), size = 3, position = "jitter") +
+VcmaxbyGenotype + aes(shape = factor(Tleaf)) + scale_shape(solid = FALSE, name ="Leaf Temperature") +
+  geom_boxplot(lwd=1) +
+  geom_point(aes( shape = factor(Tleaf)), size = 5, position = "jitter") +
     theme_classic() +
   theme(axis.text=element_text(size=20),
         axis.title=element_text(size=22,face="bold")) + 
   theme(panel.border = element_blank(), axis.line = element_line(colour="black", size=2, lineend="square"))+
   theme(axis.ticks = element_line(colour="black", size=2, lineend="square"))+
+  theme(axis.ticks.length=unit(-0.25, "cm"), axis.ticks.margin=unit(0.5, "cm"))+
   ylab("Vcmax")+
   xlab("Genotype") 
 
 JmaxbyGenotype <- ggplot(IsopreneACI_coef_byTRT, aes(x=Genotype, y=Jmax))
 # 
 
-VcmaxbyGenotype + aes(shape = factor(Tleaf)) +
-  geom_boxplot(outlier.colour = "black") +
-  geom_point(aes( colour = factor(Tleaf)), size = 3, position = "jitter") +
+VcmaxbyGenotype + aes(shape = factor(Tleaf)) + scale_shape(solid = FALSE, name ="Leaf Temperature") +
+  geom_boxplot(lwd=1.25) +
+  geom_point(aes( shape = factor(Tleaf)), size = 5, position = "jitter") +
   theme_classic() +
   theme(axis.text=element_text(size=20),
         axis.title=element_text(size=22,face="bold")) + 
   theme(panel.border = element_blank(), axis.line = element_line(colour="black", size=2, lineend="square"))+
   theme(axis.ticks = element_line(colour="black", size=2, lineend="square"))+
+  theme(axis.ticks.length=unit(-0.25, "cm"), axis.ticks.margin=unit(0.5, "cm"))+
   ylab("Jmax")+
   xlab("Genotype") 
 
