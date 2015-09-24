@@ -20,6 +20,8 @@
 # library(devtools)
 # install_bitbucket("remkoduursma/plantecophys")
 
+
+
 library(devtools)
 library (plantecophys)
 library(dplyr)
@@ -39,21 +41,21 @@ load ("dat_Iso_01.Rda")
 # For the simple case - create a dataframe that is a subset of dat_Iso_01.Rda containing a single
 # A/ci curve - I picked the line and data at random from a list of available lines and dates.
 #
-Junkaci_001 = dat_Iso_01   %>% #piping command for filter
-  #restrict to a single Aci curve filter out any Anet values that are too big
-  filter(Anet < 50) %>% #piping command for mutate
-  #create new variables (rename them) to be consistent with fitacis
-  #Grouping by genetic line, measurement date and reference temperature
-  mutate(ACIgroups=as.factor(paste(line, date, Tref, sep="")), PARi=1800, dateMeas=date, CO2S=CO2, Ci=Ci, Tleaf=Tref, Photo=Anet, Patm=91)  %>%
-  
-  #select only these variables
-  select(line,dateMeas,ACIgroups, CO2S,Ci,Tleaf,Photo, PARi, Patm)  
-
-#group by ACIgroups
-Junkaci_002 = Junkaci_001 %>%
-  group_by(ACIgroups)
-
-CheckACI_dplyr= fitacis(Junkaci_002, "ACIgroups")
+# Junkaci_001 = dat_Iso_01   %>% #piping command for filter
+#   #restrict to a single Aci curve filter out any Anet values that are too big
+#   filter(Anet < 50) %>% #piping command for mutate
+#   #create new variables (rename them) to be consistent with fitacis
+#   #Grouping by genetic line, measurement date and reference temperature
+#   mutate(ACIgroups=as.factor(paste(line, date, Tref, sep="")), PARi=1800, dateMeas=date, CO2S=CO2, Ci=Ci, Tleaf=Tref, Photo=Anet, Patm=91)  %>%
+#   
+#   #select only these variables
+#   select(line,dateMeas,ACIgroups, CO2S,Ci,Tleaf,Photo, PARi, Patm)  
+# 
+# #group by ACIgroups
+# Junkaci_002 = Junkaci_001 %>%
+#   group_by(ACIgroups)
+# 
+# CheckACI_dplyr= fitacis(Junkaci_002, "ACIgroups")
 
 # save(Junkaci_002, file="output/IsopreneACIs_Amberly_grouped.csv")
 # 
@@ -64,6 +66,7 @@ CheckACI_dplyr= fitacis(Junkaci_002, "ACIgroups")
 IsopreneACIs_outlyrsRmoved=read.csv("data/IsopreneACIs_Amberly_hackedgroups.csv")
 IsopreneACI_fitsbycurve= fitacis(IsopreneACIs_outlyrsRmoved, "ACIgroups")
 
+plot(IsopreneACI_fitsbycurve, how="manyplots")
 IsopreneACI_coef <- coef(IsopreneACI_fitsbycurve)
 
 unique(IsopreneACIs_outlyrsRmoved$ACIgroups)
@@ -83,7 +86,6 @@ IsopreneACI_coef_byTRT = IsopreneACI_coef_byTRT01  %>%
   mutate(Genotype=line, MeasDate=dateMeas)   %>%
   group_by(Genotype, Tleaf)   %>%
   select(-dateMeas,-line)
-  
   
 
 #ANOVA and statistical tests
