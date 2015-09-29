@@ -84,7 +84,10 @@ IsopreneACI_coef_byTRT = IsopreneACI_coef_byTRT01  %>%
   mutate(Genotype=line, MeasDate=dateMeas)   %>%
   group_by(Genotype, Tleaf)   %>%
   select(-dateMeas,-line)
-  
+
+
+save(IsopreneACI_coef_byTRT, file="IsopreneACI_coef_byTRT.Rda")
+save(IsopreneACI_coef_byTRT01, file="IsopreneACI_coef_byTRT01.Rda")
 
 #ANOVA and statistical tests
 
