@@ -20,8 +20,6 @@
 # library(devtools)
 # install_bitbucket("remkoduursma/plantecophys")
 
-
-
 library(devtools)
 library (plantecophys)
 library(dplyr)
