@@ -14,36 +14,28 @@ load ("dat_Iso_01.Rda")
 unique(dat_Iso_01$date) 
 unique(dat_Iso_01$line)
 
-#filter single line to check it
-filter(dat_Iso_01, line=="49-177")
+# #group by ACIgroups
+# Junkaci_002 = Junkaci_001 %>%
+#   group_by(ACIgroups)
+dat_Iso_02 = dat_Iso_01 %>%
+mutate(LongACIgroups=as.factor(paste(line, date, Tref, sep="")), Genotype=line, MeasDate=date, CO2S=CO2, Ci=Ci, Tleaf=Tref, Photo=Anet)  %>%
+  select(-date,-line) %>%
+group_by(LongACIgroups)
 
-#Assign data to new DF called Junk1
-junk1=filter(dat_Iso_01, line=="49-177")
+dat_Iso_02norm= dat_Iso_02 %>% group_by(Genotype, MeasDate, Tleaf) %>%
+  filter(Photo<50) %>%
+  mutate(Iso.norm = Iso_nmol_p_umol_p_sec_p_m2 / max(Iso_nmol_p_umol_p_sec_p_m2),
+         Photo.norm = Photo / max(Photo)) 
 
-#Assign exactly the same data to a new DF called Junkx using dplyr 
-Junkx <- dat_Iso_01 %>%
-  filter(line=="49-177")  #NOTE filter(condition1, condition2..) for AND operators.
-
-#check unique dates in junk1
-unique(junk1$date)
-
-#apply second filter to remove outlier Anet numbers
-junk2=filter(junk1, date=="7/20/2014", Anet < 50)
-
-#apply second filter to remove outlier Anet numbers | same thing using dplyr commands
-Junky <- Junkx %>%
-  filter(date=="7/20/2014", Anet < 50)  #NOTE filter(condition1, condition2..) for AND operators.
-
+plot (dat_Iso_02norm$Ci, dat_Iso_02norm$Iso.norm)
+summary(dat_Iso_02)
 library(grid) #required for 'unit'
 #Isoprene Plots
-IsoCi <- ggplot(junk2, aes(x=Ci, y=Iso_nmol_p_umol_p_sec_p_m2))
-#set up labels to keep track of what we are plotting
-line_label <- junk2$line[1]
-date_label <- junk2$date[1]
+IsoCi <- ggplot(dat_Iso_02norm, aes(x=Ci, y=Iso.norm ))
 
-IsoCi + aes(shape = factor(Tref)) + #different symbols for different Tref's
-  ggtitle(paste("Line",line_label,"Date ",date_label,sep=" "))+ #apply title 
-  geom_point(aes(colour = factor(Tref)), size = 8) + #different colors for different Tref's
+IsoCi + aes(shape = factor(Genotype)) + #different symbols for different Genotypes
+
+  geom_point(aes(colour = factor(Tleaf)), size = 8) + #different colors for different Leaf Temperatures
   theme_classic() + #apply classic theme (gets rid of grey background)
   theme(axis.text=element_text(size=20),
         axis.title=element_text(size=22,face="bold")) + 
