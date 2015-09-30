@@ -130,7 +130,7 @@ VcmaxbyGenotype + aes(shape = factor(Tleaf)) + scale_shape(solid = FALSE, name =
 JmaxbyGenotype <- ggplot(IsopreneACI_coef_byTRT, aes(x=Genotype, y=Jmax))
 # 
 
-VcmaxbyGenotype + aes(shape = factor(Tleaf)) + scale_shape(solid = FALSE, name ="Leaf Temperature") +
+JmaxbyGenotype + aes(shape = factor(Tleaf)) + scale_shape(solid = FALSE, name ="Leaf Temperature") +
   geom_boxplot(lwd=1.25) +
   geom_point(aes( shape = factor(Tleaf)), size = 5, position = "jitter") +
   theme_classic() +
