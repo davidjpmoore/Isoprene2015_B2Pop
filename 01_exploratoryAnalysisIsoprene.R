@@ -9,6 +9,7 @@ library(ggplot2)
 library(grid) #required for 'unit'
 
 load ("dat_Iso_01.Rda")
+plot(dat_Iso_01$date,dat_Iso_01$Iso_nmol_p_umol_p_sec_p_m2)
 
 #check unique dates and lines
 unique(dat_Iso_01$date) 

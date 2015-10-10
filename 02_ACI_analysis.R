@@ -81,3 +81,5 @@ JmaxbyGenotype + aes(shape = factor(Tleaf)) + scale_shape(solid = FALSE, name ="
   xlab("Genotype") 
 
 
+
+

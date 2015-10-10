@@ -63,6 +63,40 @@ load ("dat_Iso_01.Rda")
 #removed outlier points where LI6400 was not stable & caused failure of fit
 IsopreneACIs_outlyrsRmoved=read.csv("data/IsopreneACIs_Amberly_hackedgroups.csv")
 IsopreneACI_fitsbycurve= fitacis(IsopreneACIs_outlyrsRmoved, "ACIgroups")
+plot (IsopreneACIs_outlyrsRmoved$dateMeas, IsopreneACIs_outlyrsRmoved$Photo)
+unique(IsopreneACIs_outlyrsRmoved$dateMeas)
+
+aci_plot <- ggplot(data=IsopreneACIs_outlyrsRmoved, aes(x=Ci, y=Photo))
+aci_plot + facet_wrap(~ ACIgroups) + 
+  geom_point(colour="black", size = 2.5) +
+  theme_classic() +
+  theme(axis.text=element_text(size=20),
+        axis.title=element_text(size=22,face="bold")) + 
+  theme(panel.border = element_blank(), axis.line = element_line(colour="black", size=2, lineend="square"))+
+  theme(axis.ticks = element_line(colour="black", size=2, lineend="square"))+
+  ylab("Assimilation (umol/m2/sec)")+
+  xlab("Ci")
+
+
+TPUest = ungroup(IsopreneACIs_outlyrsRmoved) %>% 
+  arrange(ACIgroups,Ci) %>%
+  group_by(ACIgroups) %>% 
+  mutate(deltaPhoto = Photo - lag(Photo, default = 0)) %>% #calculate difference in photosynthesis from Ci to CI
+  mutate(TPUlim = as.numeric(deltaPhoto < 0)) #indexing whether there is TPU limitation
+
+
+Delta_plot <- ggplot(data=TPUest, aes(x=Ci, y=Photo))
+Delta_plot + facet_wrap(~ ACIgroups) + 
+  geom_point(colour="black", size = 3.5) + 
+  aes(shape = factor(TPUlim)) +
+  theme_classic() +
+  theme(axis.text=element_text(size=20),
+        axis.title=element_text(size=22,face="bold")) + 
+  theme(panel.border = element_blank(), axis.line = element_line(colour="black", size=2, lineend="square"))+
+  theme(axis.ticks = element_line(colour="black", size=2, lineend="square"))+
+  ylab("Assimilation (umol/m2/sec)")+
+  xlab("Ci")
+
 
 plot(IsopreneACI_fitsbycurve, how="manyplots")
 IsopreneACI_coef <- coef(IsopreneACI_fitsbycurve)
