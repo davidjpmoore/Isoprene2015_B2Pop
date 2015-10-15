@@ -18,7 +18,7 @@ library(grid) #required for 'unit'
 B2Physiologymaster = tbl_df( read.table("./data/Neice_IsopreneAci2014.csv", na.strings=c('NA'), stringsAsFactors=FALSE, head=TRUE, sep=","))
 
 summary(B2Physiologymaster)
-
+unique(B2Physiologymaster$date)
 #
 # Note from Russ Monson
 #
