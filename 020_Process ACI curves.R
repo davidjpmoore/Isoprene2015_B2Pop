@@ -24,6 +24,7 @@ library(devtools)
 library (plantecophys)
 library(dplyr)
 library(ggplot2)
+library(doBy) #for groupwise summary statistics
 library(grid) #required for 'unit'
 #Load data
 #Amberly's data from B2
@@ -77,12 +78,20 @@ aci_plot + facet_wrap(~ ACIgroups) +
   ylab("Assimilation (umol/m2/sec)")+
   xlab("Ci")
 
+HighCO2 = filter(IsopreneACIs_outlyrsRmoved, Ci>800)
 
+HighCO2mean=summaryBy(Photo+Tleaf~line, data=HighCO2,
+          FUN=c(mean,sd,median,length))
+
+
+HighCO2mean01=HighCO2mean %>% 
+mutate (ConfI=(1.96*(Photo.sd/(sqrt(Photo.length)))))
+  
 TPUest = ungroup(IsopreneACIs_outlyrsRmoved) %>% 
   arrange(ACIgroups,Ci) %>%
   group_by(ACIgroups) %>% 
   mutate(deltaPhoto = Photo - lag(Photo, default = 0)) %>% #calculate difference in photosynthesis from Ci to CI
-  mutate(TPUlim = as.numeric(deltaPhoto < 0)) #indexing whether there is TPU limitation
+  mutate(TPUlim = as.numeric(deltaPhoto < 0.5)) #indexing whether there is TPU limitation
 
 
 Delta_plot <- ggplot(data=TPUest, aes(x=Ci, y=Photo))
@@ -98,8 +107,28 @@ Delta_plot + facet_wrap(~ ACIgroups) +
   xlab("Ci")
 
 
+
+Delta_plot02 <- ggplot(data=TPUest, aes(x=Ci, y=deltaPhoto))
+Delta_plot02 + facet_wrap(~ ACIgroups) + 
+  geom_point(colour="black", size = 3.5) + 
+  aes(shape = factor(TPUlim)) +
+  geom_hline(yintercept=0.5)+
+  theme_classic() +
+  theme(axis.text=element_text(size=20),
+        axis.title=element_text(size=22,face="bold")) + 
+  theme(panel.border = element_blank(), axis.line = element_line(colour="black", size=2, lineend="square"))+
+  theme(axis.ticks = element_line(colour="black", size=2, lineend="square"))+
+  ylab("Change in Assimilation (umol/m2/sec)")+
+  xlab("Ci")
+
+save(TPUest, file = "TPUest.csv")
+write.csv(TPUest,file = "TPUest.csv")
+
 plot(IsopreneACI_fitsbycurve, how="manyplots")
 IsopreneACI_coef <- coef(IsopreneACI_fitsbycurve)
+
+write.csv(IsopreneACI_fitsbycurve,file = "IsopreneACI_fitsbycurve.csv")
+
 
 unique(IsopreneACIs_outlyrsRmoved$ACIgroups)
 
